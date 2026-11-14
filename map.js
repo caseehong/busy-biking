@@ -147,6 +147,10 @@ map.on('load', async () => {
         d3.max(allTrafficStations, (station) => station.totalTraffic) || 1,
       ])
       .range([0, 25]);
+    const stationFlow = d3
+      .scaleQuantize()
+      .domain([0, 1])
+      .range([0, 0.5, 1]);
 
     let circles;
 
@@ -164,7 +168,12 @@ map.on('load', async () => {
         .attr('r', (station) => radiusScale(station.totalTraffic))
         .attr('fill', 'steelblue')
         .attr('stroke', 'white')
-        .attr('stroke-width', 1);
+        .attr('stroke-width', 1)
+        .style('--departure-ratio', (station) =>
+          station.totalTraffic === 0
+            ? 0.5
+            : stationFlow(station.departures / station.totalTraffic),
+        );
 
       circles
         .selectAll('title')

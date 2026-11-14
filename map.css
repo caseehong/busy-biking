@@ -73,8 +73,36 @@ header p {
 }
 
 #map svg circle {
+  fill: var(--color);
   fill-opacity: 0.6;
   pointer-events: auto;
+}
+
+:root {
+  --color-departures: steelblue;
+  --color-arrivals: darkorange;
+}
+
+#map svg circle,
+.legend > div {
+  --color: color-mix(
+    in oklch,
+    var(--color-departures) calc(100% * var(--departure-ratio)),
+    var(--color-arrivals)
+  );
+}
+
+.legend {
+  display: flex;
+  gap: 1px;
+  margin-block: 0.75em;
+}
+
+.legend > div {
+  flex: 1;
+  padding: 0.5em 1em;
+  background-color: var(--color);
+  text-align: center;
 }
 
 @media (max-width: 700px) {
@@ -85,5 +113,9 @@ header p {
 
   .time-filter {
     margin-left: 0;
+  }
+
+  .legend {
+    font-size: 0.85em;
   }
 }
