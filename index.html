@@ -15,8 +15,20 @@
     <script src="map.js" type="module"></script>
   </head>
   <body>
-    <h1>🚴🏼‍♀️ Busy Biking</h1>
-    <p>An interactive map of Boston that visualizes bike traffic at different times of the day.</p>
+    <header>
+      <div>
+        <h1>🚴🏼‍♀️ Busy Biking</h1>
+        <p>An interactive map of Boston that visualizes bike traffic at different times of the day.</p>
+      </div>
+      <label class="time-filter" for="time-slider">
+        Filter by time:
+        <input id="time-slider" type="range" min="-1" max="1440" value="-1" step="1" />
+        <span class="time-display">
+          <time id="selected-time"></time>
+          <em id="any-time">(any time)</em>
+        </span>
+      </label>
+    </header>
     <div id="map">
       <svg></svg>
     </div>
