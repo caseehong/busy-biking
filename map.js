@@ -13,7 +13,14 @@ const map = new mapboxgl.Map({
   maxZoom: 18,
 });
 
+function getCoords(station) {
+  const point = new mapboxgl.LngLat(Number(station.lon), Number(station.lat));
+  const { x, y } = map.project(point);
+  return { cx: x, cy: y };
+}
+
 map.on('load', async () => {
+  const svg = d3.select('#map').select('svg');
   const jsonurl = 'https://gbfs.bluebikes.com/gbfs/en/station_information.json';
 
   try {
@@ -22,6 +29,29 @@ map.on('load', async () => {
 
     const stations = jsonData.data.stations;
     console.log('Stations Array:', stations);
+
+    const circles = svg
+      .selectAll('circle')
+      .data(stations)
+      .enter()
+      .append('circle')
+      .attr('r', 5)
+      .attr('fill', 'steelblue')
+      .attr('stroke', 'white')
+      .attr('stroke-width', 1)
+      .attr('opacity', 0.8);
+
+    function updatePositions() {
+      circles
+        .attr('cx', (station) => getCoords(station).cx)
+        .attr('cy', (station) => getCoords(station).cy);
+    }
+
+    updatePositions();
+    map.on('move', updatePositions);
+    map.on('zoom', updatePositions);
+    map.on('resize', updatePositions);
+    map.on('moveend', updatePositions);
   } catch (error) {
     console.error('Error loading JSON:', error);
   }
